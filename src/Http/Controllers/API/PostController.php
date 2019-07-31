@@ -36,8 +36,10 @@ class PostController extends BaseController
     public function index(Request $request)
     {
         $this->validate($request, ['thread_id' => ['required']]);
-
-        $posts = $this->model()->where('thread_id', $request->input('thread_id'))->get();
+        $posts = $this->model()
+            ->where('thread_id', $request->input('thread_id'))
+            ->withRequestScopes($request)
+            ->get();
 
         return $this->response($posts);
     }
