@@ -1,5 +1,5 @@
 {
-    "name": "riari/laravel-forum",
+    "name": "stosdima/laravel-forum",
     "description": "A Laravel 5 package providing a solid foundation for building discussion forums",
     "keywords": ["laravel", "laravel-5", "forum", "discuss"],
     "license": "MIT",
