@@ -76,7 +76,7 @@ class PostController extends BaseController
         $this->authorize('reply', $thread);
 
         $post = $this->model()->create($request->only(['thread_id', 'post_id', 'author_id', 'content']));
-        $post->load('thread');
+        $post->load('thread', 'author');
 
         return $this->response($post, $this->trans('created'), 201);
     }
