@@ -1,12 +1,9 @@
-<?php namespace Riari\Forum\Http\Controllers\API;
+<?php
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Riari\Forum\Models\Category;
+
+namespace Riari\Forum\Http\Controllers\API;
+
 use Riari\Forum\Models\Like;
-use Riari\Forum\Models\Post;
-use Riari\Forum\Models\Thread;
 
 class LikeController extends BaseController
 {
