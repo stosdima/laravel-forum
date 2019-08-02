@@ -68,6 +68,11 @@ class Post extends BaseModel
         return $this->hasMany(Post::class, 'post_id')->withTrashed();
     }
 
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
     /**
      * Attribute: First post flag.
      *
