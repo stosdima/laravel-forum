@@ -102,6 +102,19 @@ class Thread extends BaseModel
     }
 
     /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopePopular($query)
+    {
+        $currentMonth = date('m');
+
+        return $query->whereMonth('created_at', $currentMonth)
+            ->where('reply_count', '!=', 0)
+            ->latest('reply_count');
+    }
+
+    /**
      * Attribute: Paginated posts.
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator

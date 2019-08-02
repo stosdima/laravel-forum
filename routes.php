@@ -27,6 +27,8 @@ $r->group([
     $r->group(['prefix' => 'thread', 'as' => 'thread.'], function ($r)
     {
         $r->get('/', ['as' => 'index', 'uses' => 'ThreadController@index']);
+        $r->get('/recent', ['as' => 'recent', 'uses' => 'ThreadController@recentCreated']);
+        $r->get('/popular', ['as' => 'popular', 'uses' => 'ThreadController@popular']);
         $r->get('new', ['as' => 'index-new', 'uses' => 'ThreadController@indexNew']);
         $r->patch('new', ['as' => 'mark-new', 'uses' => 'ThreadController@markNew']);
         $r->post('/', ['as' => 'store', 'uses' => 'ThreadController@store']);

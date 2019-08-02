@@ -2,6 +2,7 @@
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Riari\Forum\Models\Category;
 
@@ -35,7 +36,18 @@ class CategoryController extends BaseController
      */
     public function index(Request $request)
     {
-        $categories = $this->model()->withRequestScopes($request);
+        $categories = $this->model()
+            ->withRequestScopes($request)
+            ->when($request->has('with') && in_array('categories', $request->with), function ($query) {
+                $query->withCount([
+                    'categories AS total_threads' => function ($query) {
+                        $query->select(DB::raw("SUM(thread_count) as total_thread"));
+                    },
+                    'categories AS total_posts' => function ($query) {
+                        $query->select(DB::raw("SUM(post_count) as total_posts"));
+                    }
+                ]);
+            });
 
         $categories = $categories->get()->filter(function ($category) {
             if ($category->private) {

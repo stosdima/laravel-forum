@@ -37,11 +37,22 @@ class ThreadController extends BaseController
      */
     public function index(Request $request)
     {
-        $this->validate($request, ['category_id' => ['required']]);
+        $this->validate($request, [
+            'category_id' => ['required'],
+            'name' => [
+                'min:1',
+                'nullable',
+                'string',
+                'max:255'
+            ]
+        ]);
 
         $threads = $this->model()
             ->withRequestScopes($request)
             ->where('category_id', $request->input('category_id'))
+            ->when($request->get('name', null), function ($query) use ($request) {
+                $query->where('title', 'LIKE', "%$request->name%");
+            })
             ->get();
 
         return $this->response($threads);
@@ -151,6 +162,36 @@ class ThreadController extends BaseController
         });
 
         return $this->response($threads);
+    }
+
+    /**
+     * Get popular threads
+     *
+     * @return JsonResponse|\Illuminate\Http\Response
+     */
+    public function popular()
+    {
+        $popularThreads = Thread::with('author')
+            ->popular()
+            ->limit(5)
+            ->get();
+
+        return $this->response($popularThreads);
+    }
+
+    /**
+     * Get recently created threads
+     *
+     * @return JsonResponse|\Illuminate\Http\Response
+     */
+    public function recentCreated()
+    {
+        $recentTreads = Thread::with('author')
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return $this->response($recentTreads);
     }
 
     /**

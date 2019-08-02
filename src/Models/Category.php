@@ -28,12 +28,6 @@ class Category extends BaseModel
 	 */
     protected $fillable = ['category_id', 'title', 'description', 'weight', 'enable_threads', 'private', 'thread_count', 'post_count'];
 
-    /** The attributes appending
-     *
-     * @var array
-     */
-    protected $appends = ['total_posts', 'total_answers'];
-
     /**
      * Create a new category model instance.
      *
@@ -175,25 +169,5 @@ class Category extends BaseModel
 
             return $depth;
         });
-    }
-
-    /**
-     * Get total Posts
-     *
-     * @return mixed
-     */
-    public function getTotalPostsAttribute()
-    {
-        return $this->categories()->sum('thread_count');
-    }
-
-    /**
-     * Get total answers in posts
-     *
-     * @return mixed
-     */
-    public function getTotalAnswersAttribute()
-    {
-        return $this->categories()->sum('post_count');
     }
 }
