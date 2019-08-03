@@ -9,8 +9,10 @@ use Illuminate\Support\ServiceProvider;
 use Riari\Forum\Console\Commands\RefreshStats;
 use Riari\Forum\Contracts\Likes\LikeableServiceContract;
 use Riari\Forum\Contracts\Likes\LikeContract;
+use Riari\Forum\Contracts\Likes\LikeCounterContract;
 use Riari\Forum\Http\Middleware\APIAuth;
 use Riari\Forum\Models\Like;
+use Riari\Forum\Models\LikeCounter;
 use Riari\Forum\Models\Observers\LikeObserver;
 use Riari\Forum\Models\Post;
 use Riari\Forum\Models\Thread;
@@ -139,6 +141,7 @@ class ForumServiceProvider extends ServiceProvider
     public function registerContracts()
     {
         $this->app->bind(LikeContract::class, Like::class);
+        $this->app->bind(LikeCounterContract::class, LikeCounter::class);
         $this->app->singleton(LikeableServiceContract::class, LikeableService::class);
     }
 

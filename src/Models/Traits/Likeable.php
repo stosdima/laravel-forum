@@ -7,6 +7,7 @@ namespace Riari\Forum\Models\Traits;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Riari\Forum\Contracts\Likes\LikeableServiceContract;
+use Riari\Forum\Contracts\Likes\LikeCounterContract;
 use Riari\Forum\Enums\LikeType;
 use Riari\Forum\Models\Like;
 
@@ -45,7 +46,7 @@ trait Likeable
      */
     public function likesCounter()
     {
-        return $this->morphOne(Like::class, 'likeable')->where('type_id', LikeType::LIKE);
+        return $this->morphOne(app(LikeCounterContract::class), 'likeable')->where('type_id', LikeType::LIKE);
     }
 
     /**
@@ -55,7 +56,7 @@ trait Likeable
      */
     public function dislikesCounter()
     {
-        return $this->morphOne(Like::class, 'likeable')->where('type_id', LikeType::DISLIKE);
+        return $this->morphOne(app(LikeCounterContract::class), 'likeable')->where('type_id', LikeType::DISLIKE);
     }
 
     /**
@@ -163,7 +164,7 @@ trait Likeable
      */
     public function getDislikesCountAttribute()
     {
-        return $this->disLikesCounter ? $this->disKikesCounter->count : 0;
+        return $this->disLikesCounter ? $this->disLikesCounter->count : 0;
     }
 
     public function getLikedAttribute()

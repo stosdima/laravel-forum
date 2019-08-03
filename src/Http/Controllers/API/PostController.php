@@ -84,6 +84,10 @@ class PostController extends BaseController
         return $this->response($post, $this->trans('created'), 201);
     }
 
+    /**
+     * @param integer $id
+     * @return JsonResponse|\Illuminate\Http\Response
+     */
     public function like($id)
     {
         $post = $this->model()->findOrFail($id);
@@ -92,6 +96,10 @@ class PostController extends BaseController
         return $this->response($post);
     }
 
+    /**
+     * @param integer $id
+     * @return JsonResponse|\Illuminate\Http\Response
+     */
     public function dislike($id)
     {
         $post = $this->model()->findOrFail($id);

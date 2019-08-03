@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLikesTable extends Migration
+class CreateLikesCounterTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,20 @@ class CreateLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create('forum_likes', function (Blueprint $table) {
+
+        Schema::create('forum_likes_counter', function (Blueprint $table) {
             $table->increments('id');
             $table->morphs('likeable');
-            $table->integer('user_id')->unsigned()->index();
             $table->enum('type_id', [
                 'like',
                 'dislike',
             ])->default('like');
-            $table->timestamp('created_at')->nullable();
+            $table->integer('count')->unsigned()->default(0);
             $table->unique([
                 'likeable_id',
                 'likeable_type',
-                'user_id',
-            ], 'like_user_unique');
+                'type_id',
+            ], 'like_counter_unique');
         });
     }
 
@@ -37,6 +37,6 @@ class CreateLikesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('forum_likes');
+        Schema::dropIfExists('forum_likes_counter');
     }
 }

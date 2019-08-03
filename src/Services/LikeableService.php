@@ -46,6 +46,14 @@ class LikeableService implements LikeableServiceContract
         ]);
     }
 
+    /**
+     * @param LikeableContract $likeable
+     * @param $type
+     * @param $user
+     * @return mixed|void
+     * @throws LikeTypeNotDefined
+     * @throws UserNotDefined
+     */
     public function removeLike(LikeableContract $likeable, $type, $user)
     {
         $user = $this->getUser($user);
@@ -60,6 +68,14 @@ class LikeableService implements LikeableServiceContract
         $like->delete();
     }
 
+    /**
+     * @param LikeableContract $likeable
+     * @param $type
+     * @param $user
+     * @return mixed|void
+     * @throws LikeTypeNotDefined
+     * @throws UserNotDefined
+     */
     public function toggleLike(LikeableContract $likeable, $type, $user)
     {
         $user = $this->getUser($user);
