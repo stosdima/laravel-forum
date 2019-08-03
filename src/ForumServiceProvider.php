@@ -7,11 +7,16 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Riari\Forum\Console\Commands\RefreshStats;
+use Riari\Forum\Contracts\Likes\LikeableServiceContract;
+use Riari\Forum\Contracts\Likes\LikeContract;
 use Riari\Forum\Http\Middleware\APIAuth;
+use Riari\Forum\Models\Like;
+use Riari\Forum\Models\Observers\LikeObserver;
 use Riari\Forum\Models\Post;
 use Riari\Forum\Models\Thread;
 use Riari\Forum\Models\Observers\PostObserver;
 use Riari\Forum\Models\Observers\ThreadObserver;
+use Riari\Forum\Services\LikeableService;
 
 class ForumServiceProvider extends ServiceProvider
 {
@@ -23,6 +28,7 @@ class ForumServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands([RefreshStats::class]);
+        $this->registerContracts();
     }
 
     /**
@@ -109,6 +115,7 @@ class ForumServiceProvider extends ServiceProvider
     {
         Thread::observe(new ThreadObserver);
         Post::observe(new PostObserver);
+        $this->app->make(LikeContract::class)->observe(LikeObserver::class);
     }
 
     /**
@@ -127,6 +134,12 @@ class ForumServiceProvider extends ServiceProvider
         foreach (config('forum.integration.policies.model') as $model => $policy) {
             $gate->policy($model, $policy);
         }
+    }
+
+    public function registerContracts()
+    {
+        $this->app->bind(LikeContract::class, Like::class);
+        $this->app->singleton(LikeableServiceContract::class, LikeableService::class);
     }
 
     /**

@@ -1,12 +1,14 @@
 <?php namespace Riari\Forum\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Riari\Forum\Contracts\Likes\LikeableContract;
 use Riari\Forum\Models\Traits\HasAuthor;
+use Riari\Forum\Models\Traits\Likeable;
 use Riari\Forum\Support\Traits\CachesData;
 
-class Post extends BaseModel
+class Post extends BaseModel implements LikeableContract
 {
-    use SoftDeletes, HasAuthor, CachesData;
+    use SoftDeletes, HasAuthor, CachesData, Likeable;
 
     /**
      * The table associated with the model.
@@ -26,6 +28,8 @@ class Post extends BaseModel
 	 * @var array
 	 */
     protected $fillable = ['thread_id', 'author_id', 'post_id', 'content'];
+
+    protected $appends = ['liked', 'disliked'];
 
     /**
      * Create a new post model instance.
@@ -66,11 +70,6 @@ class Post extends BaseModel
     public function children()
     {
         return $this->hasMany(Post::class, 'post_id')->withTrashed();
-    }
-
-    public function likes()
-    {
-        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**

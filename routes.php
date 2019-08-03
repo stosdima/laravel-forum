@@ -49,6 +49,10 @@ $r->group([
         $r->get('/', ['as' => 'index', 'uses' => 'PostController@index']);
         $r->post('/', ['as' => 'store', 'uses' => 'PostController@store']);
         $r->get('{id}', ['as' => 'fetch', 'uses' => 'PostController@fetch']);
+
+        $r->post('{id}/like', ['as' => 'like', 'uses' => 'PostController@like']);
+        $r->post('{id}/dislike', ['as' => 'like', 'uses' => 'PostController@dislike']);
+
         $r->delete('{id}', ['as' => 'delete', 'uses' => 'PostController@destroy']);
         $r->patch('{id}/restore', ['as' => 'restore', 'uses' => 'PostController@restore']);
         $r->patch('{id}', ['as' => 'update', 'uses' => 'PostController@update']);

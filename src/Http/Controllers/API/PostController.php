@@ -2,8 +2,11 @@
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Riari\Forum\Contracts\Likes\LikeableServiceContract;
 use Riari\Forum\Models\Post;
 use Riari\Forum\Models\Thread;
+use Riari\Forum\Services\LikeableService;
 
 class PostController extends BaseController
 {
@@ -79,5 +82,21 @@ class PostController extends BaseController
         $post->load('thread', 'author');
 
         return $this->response($post, $this->trans('created'), 201);
+    }
+
+    public function like($id)
+    {
+        $post = $this->model()->findOrFail($id);
+        $post->toggleLike(Auth::id());
+
+        return $this->response($post);
+    }
+
+    public function dislike($id)
+    {
+        $post = $this->model()->findOrFail($id);
+        $post->toggleDislike(Auth::id());
+
+        return $this->response($post);
     }
 }

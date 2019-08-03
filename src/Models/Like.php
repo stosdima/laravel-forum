@@ -1,26 +1,35 @@
 <?php
 
+
 namespace Riari\Forum\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Riari\Forum\Contracts\Likes\LikeContract;
 
 /**
- *
- * @mixin \Eloquent
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string $likeable_type
- * @property int $likeable_id
- * @property int $author_id Author
- * @property int $like Like
- * @property int $dislike Dislike
- * @method static Builder|Like newModelQuery()
- * @method static Builder|Like newQuery()
- * @method static Builder|Like query()
+ * Class Like
+ * @package Riari\Forum\Models
  */
-class Like extends BaseModel
+class Like extends BaseModel implements LikeContract
 {
-    protected $table = 'forum_posts_likes';
+    public $timestamps = false;
+
+    /**
+     * @var string
+     */
+    protected $table = 'forum_likes';
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'type_id',
+    ];
+
+    /** @return MorphTo */
+    public function likeable()
+    {
+        return $this->morphTo();
+    }
 }
