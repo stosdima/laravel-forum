@@ -29,7 +29,7 @@ class Post extends BaseModel implements LikeableContract
 	 */
     protected $fillable = ['thread_id', 'author_id', 'post_id', 'content'];
 
-    protected $appends = ['liked', 'disliked'];
+    protected $appends = ['liked', 'disliked', 'likes_count', 'dislikes_count'];
 
     /**
      * Create a new post model instance.
