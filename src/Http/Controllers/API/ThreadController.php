@@ -167,11 +167,13 @@ class ThreadController extends BaseController
     /**
      * Get popular threads
      *
+     * @param Request $request
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function popular()
+    public function popular(Request $request)
     {
-        $popularThreads = Thread::with('author')
+        $popularThreads = $this->model()
+            ->withRequestScopes($request)
             ->popular()
             ->limit(5)
             ->get();
@@ -182,11 +184,13 @@ class ThreadController extends BaseController
     /**
      * Get recently created threads
      *
+     * @param Request $request
      * @return JsonResponse|\Illuminate\Http\Response
      */
-    public function recentCreated()
+    public function recentCreated(Request $request)
     {
-        $recentTreads = Thread::with('author')
+        $recentTreads = $this->model()
+            ->withRequestScopes($request)
             ->latest()
             ->limit(5)
             ->get();
