@@ -74,11 +74,11 @@ class PostController extends BaseController
     public function store(Request $request)
     {
         $this->validate($request, ['thread_id' => ['required'], 'author_id' => ['required'], 'content' => ['required']]);
-
         $thread = Thread::find($request->input('thread_id'));
         $this->authorize('reply', $thread);
-
-        $post = $this->model()->create($request->only(['thread_id', 'post_id', 'author_id', 'content']));
+        $data = $request->only(['thread_id', 'post_id', 'author_id', 'content']);
+        $data['author_id'] = Auth::id();
+        $post = $this->model()->create($data);
         $post->load('thread', 'author');
 
         return $this->response($post, $this->trans('created'), 201);
