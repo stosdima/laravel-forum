@@ -29,6 +29,12 @@ class Thread extends BaseModel
     protected $fillable = ['category_id', 'author_id', 'title', 'locked', 'pinned', 'reply_count'];
 
     /**
+     * The attributes that will be appended
+     *
+     * @var array
+     */
+    protected $appends = ['last_post'];
+    /**
      * @var string
      */
     const STATUS_UNREAD = 'unread';
@@ -151,7 +157,9 @@ class Thread extends BaseModel
      */
     public function getLastPostAttribute()
     {
-        return $this->posts()->orderBy('created_at', 'desc')->first();
+        return $this->posts()
+            ->with('author')
+            ->orderBy('created_at', 'desc')->first();
     }
 
     /**
