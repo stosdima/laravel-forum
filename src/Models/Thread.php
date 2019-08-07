@@ -33,7 +33,7 @@ class Thread extends BaseModel
      *
      * @var array
      */
-    protected $appends = ['last_post'];
+    protected $appends = ['last_post', 'subscribed'];
     /**
      * @var string
      */
@@ -47,7 +47,7 @@ class Thread extends BaseModel
     /**
      * Create a new thread model instance.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -81,6 +81,21 @@ class Thread extends BaseModel
     }
 
     /**
+     * Relationship: Subscribers.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function subscribers()
+    {
+        return $this->belongsToMany(
+            config('forum.integration.user_model'),
+            'forum_threads_subscribers',
+            'thread_id',
+            'user_id'
+        )->withTimestamps();
+    }
+
+    /**
      * Relationship: Posts.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -95,7 +110,7 @@ class Thread extends BaseModel
     /**
      * Scope: Recent threads.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param \Illuminate\Database\Query\Builder $query
      * @return \Illuminate\Database\Query\Builder
      */
     public function scopeRecent($query)
@@ -200,6 +215,22 @@ class Thread extends BaseModel
         return null;
     }
 
+    public function getSubscribedAttribute()
+    {
+        if (auth()->check()) {
+            $reader = $this->subscribers()
+                ->where(
+                    'forum_threads_subscribers.user_id',
+                    auth()->user()->getKey()
+                )->first();
+
+            return (!is_null($reader)) ? true : false;
+        }
+
+        return null;
+    }
+
+
     /**
      * Attribute: Read/unread/updated status for current reader.
      *
@@ -221,7 +252,7 @@ class Thread extends BaseModel
     /**
      * Helper: Mark this thread as read for the given user ID.
      *
-     * @param  int  $userID
+     * @param int $userID
      * @return void
      */
     public function markAsRead($userID)

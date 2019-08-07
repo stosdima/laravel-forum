@@ -41,6 +41,8 @@ $r->group([
         $r->patch('{id}/pin', ['as' => 'pin', 'uses' => 'ThreadController@pin']);
         $r->patch('{id}/unpin', ['as' => 'unpin', 'uses' => 'ThreadController@unpin']);
         $r->patch('{id}/rename', ['as' => 'rename', 'uses' => 'ThreadController@rename']);
+        $r->patch('{id}/subscribe', ['as' => 'subscribe', 'uses' => 'ThreadController@subscribe']);
+        $r->patch('{id}/unsubscribe', ['as' => 'unsubscribe', 'uses' => 'ThreadController@unsubscribe']);
     });
 
     // Posts

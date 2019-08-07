@@ -2,6 +2,7 @@
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Riari\Forum\Models\Category;
 use Riari\Forum\Models\Post;
@@ -376,5 +377,23 @@ class ThreadController extends BaseController
     public function bulkUnpin(Request $request)
     {
         return $this->bulk($request, 'unpin', 'updated');
+    }
+
+    public function subscribe($id)
+    {
+        $thread = $this->model()
+            ->findOrFail($id);
+        $thread->subscribers()->attach(Auth::id());
+
+        return $this->response($thread);
+    }
+
+    public function unSubscribe($id)
+    {
+        $thread = $this->model()
+            ->findOrFail($id);
+        $thread->subscribers()->detach();
+
+        return $this->response($thread);
     }
 }

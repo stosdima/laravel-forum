@@ -38,6 +38,7 @@ class ThreadObserver
 
             // Also detach readers
             $thread->readers()->detach();
+            $thread->subscribers()->detach();
         } else {
             // The thread was soft-deleted, so just soft-delete its posts
             $thread->posts()->delete();
