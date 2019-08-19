@@ -26,7 +26,7 @@ class Thread extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['category_id', 'author_id', 'title', 'locked', 'pinned', 'reply_count'];
+    protected $fillable = ['category_id', 'author_id', 'title', 'locked', 'pinned', 'reply_count', 'name'];
 
     /**
      * The attributes that will be appended

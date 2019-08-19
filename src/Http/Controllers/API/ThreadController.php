@@ -108,7 +108,18 @@ class ThreadController extends BaseController
             return $this->buildFailedValidationResponse($request, trans('forum::validation.category_threads_enabled'));
         }
 
-        $thread = $this->model()->create($request->only(['category_id', 'author_id', 'title']));
+        $slug = str_slug($request->title, '_');
+        if ($this->model()->where('name', $slug)->first()) {
+            return response()->json([
+                'errors' => [
+                    'content' => [
+                        'Подкатегория с таким заголовком уже существует'
+                    ]
+                ]
+            ], 422);
+        }
+
+        $thread = $this->model()->create($request->only(['category_id', 'author_id', 'title']) + ['name' => str_slug($request->title, '_')]);
         Post::create(['thread_id' => $thread->id] + $request->only('author_id', 'content'));
 
         return $this->response($thread, 201);
