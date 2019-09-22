@@ -1,5 +1,6 @@
 <?php namespace Riari\Forum\Models;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
 use Riari\Forum\Models\Category;
@@ -33,7 +34,7 @@ class Thread extends BaseModel
      *
      * @var array
      */
-    protected $appends = ['last_post', 'subscribed'];
+    protected $appends = ['last_post', 'subscribed', 'reads_count'];
     /**
      * @var string
      */
@@ -215,6 +216,16 @@ class Thread extends BaseModel
         return null;
     }
 
+    /**
+     * Attribute: Get reads count
+     *
+     * @return int
+     */
+    public function getReadsCountAttribute()
+    {
+        return $this->readers()->count();
+    }
+
     public function getSubscribedAttribute()
     {
         if (auth()->check()) {
@@ -263,6 +274,23 @@ class Thread extends BaseModel
             } elseif ($this->updatedSince($this->reader)) {
                 $this->reader->touch();
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Helper: Mark this thread without old as read for the given user ID.
+     *
+     * @param int $userID
+     * @return void
+     */
+    public function asRead($userID)
+    {
+        if (is_null($this->reader)) {
+            $this->readers()->attach($userID);
+        } elseif ($this->updatedSince($this->reader)) {
+            $this->reader->touch();
         }
 
         return $this;

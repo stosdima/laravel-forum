@@ -113,7 +113,7 @@ class ThreadController extends BaseController
             return response()->json([
                 'errors' => [
                     'content' => [
-                        'Подкатегория с таким заголовком уже существует'
+                        'Тема с таким заголовком уже существует'
                     ]
                 ]
             ], 422);

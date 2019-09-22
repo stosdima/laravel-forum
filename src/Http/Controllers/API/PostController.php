@@ -43,6 +43,10 @@ class PostController extends BaseController
             ->withRequestScopes($request)
             ->where('thread_id', $request->input('thread_id'))
             ->get();
+        $thread = Thread::find($request->thread_id);
+        if ($thread) {
+            $thread->asRead(Auth::id());
+        }
 
         return $this->response($posts);
     }
