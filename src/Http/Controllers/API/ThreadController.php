@@ -50,7 +50,9 @@ class ThreadController extends BaseController
 
         $threads = $this->model()
             ->withRequestScopes($request)
-            ->where('category_id', $request->input('category_id'))
+            ->when(!$request->get('name'), function ($query) use ($request) {
+                $query->where('category_id', $request->input('category_id'));
+            })
             ->when($request->get('name', null), function ($query) use ($request) {
                 $query->where('title', 'LIKE', "%$request->name%");
             })
