@@ -39,23 +39,32 @@ class ThreadController extends BaseController
     public function index(Request $request)
     {
         $this->validate($request, [
-            'category_id' => ['required'],
+            'category_id' => [
+                'nullable',
+                'integer',
+                'exists:forum_categories,id'
+            ],
+            'order_by' => [
+                'string',
+                'in:created_at,name'
+            ],
             'name' => [
                 'min:1',
                 'nullable',
                 'string',
-                'max:255'
+                'max:150'
             ]
         ]);
 
         $threads = $this->model()
             ->withRequestScopes($request)
-            ->when(!$request->get('name'), function ($query) use ($request) {
-                $query->where('category_id', $request->input('category_id'));
+            ->when($request->category_id, function ($query, $category_id) {
+                $query->where('category_id', $category_id);
             })
-            ->when($request->get('name', null), function ($query) use ($request) {
-                $query->where('title', 'LIKE', "%$request->name%");
+            ->when($request->name, function ($query, $name) {
+                $query->where('title', 'LIKE', "%$name%");
             })
+            ->orderBy($request->get('order_by', 'id'))
             ->get();
 
         return $this->response($threads);
